@@ -1,0 +1,4 @@
+rhish.says("Welcome to Rhish Lang!")
+x = 42
+y = x + 8
+rhish.says(y)
