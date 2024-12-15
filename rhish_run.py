@@ -10,7 +10,7 @@ def run_rhish(file_path):
   interpreter.execute(rhish_code)
 
 if len(sys.argv) < 2:
-  print("Usage: python rhish_run.py <path_to_file.rlang>")
+  print("Usage: python rhish_run.py <path_to_file.rsv>")
 else:
   file_path = sys.argv[1]
   run_rhish(file_path)
