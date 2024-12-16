@@ -1,4 +1,5 @@
 rhish.whisper("Enter Two Numbers : ")
-a = rhish.listen()
-b = rhish.listen()
-rhish.whisper("Sum = ",a+b)
+a = 4
+b = 10
+c = a + b
+rhish.whisper(c)
