@@ -1,8 +1,20 @@
+# import os
+# import google.generativeai as genai
+# from dotenv import load_dotenv
+
+
 class RhishInterpreter:
   def __init__(self):
     self.variables = {}
     self.current_line = 0
-  
+
+    # load_dotenv()
+    # genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
+    # self.model = genai.GenerativeModel(
+    #   model_name="gemini-2.0-flash-exp",
+    #   system_instruction="provide only simple and small answers within one or two lines",
+    # )
+
   def execute(self,code):
     lines = code.split("\n")
 
@@ -18,11 +30,13 @@ class RhishInterpreter:
         self._execute_whisper(line)
       elif "rhish.listen" in line:
         self._execute_input(line)
-      elif line.startswith("agar "):
-        self._execute_if(lines)
+      elif line.startswith("rhish check "):
+        self._execute_check(lines)
+      elif line.startswith("askRhish "):
+        self._execute_ask(line)
       elif "=" in line:
         self._execute_assign(line)
-      elif line in ["{", "}", "toh"]:
+      elif line in ["{", "}", "na"]:
         continue
       else:
         print(f"Rhish Language Doesn't Understand: {line}")
@@ -67,15 +81,43 @@ class RhishInterpreter:
         value = user_input
     self.variables[var_name] = value
   
-  def _execute_if(self, lines):
-    # Get condition from if statement
-    line = lines[self.current_line - 1]
-    condition = line[5:].strip()  # Remove 'agar ' from start
+  def _execute_check(self, lines):
+    # Get the condition line
+    check_line = lines[self.current_line - 1]
+    condition = check_line[len("rhish check "):].strip()
     
-    # Check if condition has a brace - invalid syntax
-    if "{" in condition:
-        print("Error: Opening brace must be on a new line")
-        return
+    ha_statements = []
+    na_statements = []
+    
+    # Current state: collecting ha or na statements
+    collecting_ha = True
+    
+    # Look for ha and na statements
+    while self.current_line < len(lines):
+        line = lines[self.current_line].strip()
+        if not line:  # Skip empty lines
+            self.current_line += 1
+            continue
+            
+        if line.startswith("ha :"):
+            statement = line[len("ha :"):].strip()
+            ha_statements.append(statement)
+        elif line.startswith("na :"):
+            collecting_ha = False
+            statement = line[len("na :"):].strip()
+            na_statements.append(statement)
+        elif collecting_ha:
+            if line.startswith("  "):  # Check for indentation
+                ha_statements.append(line.strip())
+            else:
+                break
+        else:
+            if line.startswith("  "):  # Check for indentation
+                na_statements.append(line.strip())
+            else:
+                break
+            
+        self.current_line += 1
     
     # Evaluate condition
     try:
@@ -83,55 +125,26 @@ class RhishInterpreter:
     except:
         print(f"Invalid condition: {condition}")
         return
-
-    # Find matching blocks
-    if_block = []
-    else_block = []
-    current_block = if_block
-    brace_count = 0
-    waiting_for_brace = True
     
-    while self.current_line < len(lines):
-        line = lines[self.current_line].strip()
-        self.current_line += 1
-        
-        if waiting_for_brace:
-            if line == "{":
-                waiting_for_brace = False
-                continue
-            elif line == "toh":
-                current_block = else_block
-                continue
-            else:
-                print("Error: Expected {")
-                return
-          
-        if line == "{":
-            brace_count += 1
-        elif line == "}":
-            if brace_count > 0:
-                brace_count -= 1
-            else:
-                if current_block == else_block:
-                    break
-                current_block = else_block
-                waiting_for_brace = True
-                continue
-        elif line == "toh":
-            current_block = else_block
-            waiting_for_brace = True
-            continue
-        else:
-            current_block.append(line)
+    # Execute appropriate statements
+    statements = ha_statements if result else na_statements
+    for statement in statements:
+        if statement.startswith("rhish.say("):
+            self._execute_print(statement)
+        elif statement.startswith("rhish whisper"):
+            self._execute_whisper(statement)
+        elif "rhish.listen" in statement:
+            self._execute_input(statement)
+        elif "=" in statement:
+            self._execute_assign(statement)
 
-    # Execute appropriate block
-    block_to_execute = if_block if result else else_block
-    for line in block_to_execute:
-        if line.startswith("rhish.say("):
-            self._execute_print(line)
-        elif line.startswith("rhish whisper"):
-            self._execute_whisper(line)
-        elif "rhish.listen" in line:
-            self._execute_input(line)
-        elif "=" in line:
-            self._execute_assign(line)
+  def _execute_ask(self, line):
+    # Extract the question from the line
+    question = line[len("askRhish "):].strip()
+    try:
+        # Get response from Gemini
+        response = self.model.generate_content(question)
+        # Print the response
+        print(response.text)
+    except Exception as e:
+        print(f"Error getting response: {str(e)}")
