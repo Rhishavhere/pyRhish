@@ -1,4 +1,4 @@
-rhish.says("Welcome to Rhish Lang!")
-x = 42
-y = x + 8
-rhish.says(y)
+rhish.whisper("Enter Two Numbers : ")
+a = rhish.listen()
+b = rhish.listen()
+rhish.whisper("Sum = ",a+b)

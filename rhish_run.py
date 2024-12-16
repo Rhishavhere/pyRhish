@@ -6,7 +6,7 @@ def run_rhish(file_path):
     rhish_code=file.read()
 
   interpreter = RhishInterpreter()
-  print(f"Running Rhish file: {file_path}")
+  # print(f"Running Rhish file: {file_path}")
   interpreter.execute(rhish_code)
 
 if len(sys.argv) < 2:
