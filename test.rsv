@@ -1,12 +1,19 @@
-rhish whispers Hello World 
-rhish whispers This is Rhishh Language
-rhish whispers Testing Print and Assignment 
+rhish whisper Enter 1st Number : 
+x = rhish.listen
 
-a = 4
-b = 10
-c = a + b + 2
+rhish whisper Enter 2nd Number : 
+y = rhish.listen
 
-rhish.say(c)
-rhish.say(a+b)
-rhish.say("Sum = ",c)
-rhish.say("Sum = ",a+b)
+ans = x + y
+
+rhish.say("Sum = ",ans)
+rhish.say("Sum = ",x+y+2,"Thanks")
+
+agar x>4
+{
+  rhish whisper Let's Go
+}
+toh
+{
+  rhish whisper Shit Man
+}
