@@ -1,0 +1,12 @@
+rhish whispers Hello World 
+rhish whispers This is Rhishh Language
+rhish whispers Testing Print and Assignment 
+
+a = 4
+b = 10
+c = a + b + 2
+
+rhish.say(c)
+rhish.say(a+b)
+rhish.say("Sum = ",c)
+rhish.say("Sum = ",a+b)

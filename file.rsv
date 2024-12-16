@@ -1,5 +1,0 @@
-rhish.whisper("Enter Two Numbers : ")
-a = 4
-b = 10
-c = a + b
-rhish.whisper(c)
