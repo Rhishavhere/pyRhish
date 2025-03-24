@@ -1,0 +1,13 @@
+rhish whisper Enter 1st Number : 
+x = rhish.listen
+
+rhish whisper Enter 2nd Number : 
+y = rhish.listen
+
+sum = x + y 
+
+rhish check sum > 10
+  ha : answer = "The Sum is double digit"
+  na : answer = "The Sum is single digit"
+
+rhish.say(answer)

@@ -1,6 +1,1 @@
-rhish whisper Enter your age: 
-age = rhish.listen
-
-rhish check age >= 18
-ha : rhish whisper You are an adult!
-na : rhish whisper You are not yet an adult!
+rhish whisper meow
